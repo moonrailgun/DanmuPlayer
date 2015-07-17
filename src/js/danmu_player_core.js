@@ -1,21 +1,20 @@
 var danmu_from_sql=new Array();
 var danmu_count=0;
 
-	
- function htmlEncode(str) {
-   var s = "";
-   if (str.length == 0)
-	   return "";
-   s = str.replace(/&/g, "&gt;");
-   s = s.replace(/</g, "&lt;");
-   s = s.replace(/>/g, "&gt;");
-   s = s.replace(/\"/g, "&quot;");
-   s = s.replace(/\n/g, " ");
-   return s;
+//HTML加密
+function htmlEncode(str) {
+	var s = "";
+	if (str.length == 0)
+		return "";
+	s = str.replace(/&/g, "&gt;");
+	s = s.replace(/</g, "&lt;");
+	s = s.replace(/>/g, "&gt;");
+	s = s.replace(/\"/g, "&quot;");
+	s = s.replace(/\n/g, " ");
+	return s;
 }
-;
-(function($) {
 
+(function($) {
 	var DanmuPlayer = function(element, options) {
 		this.$element = $(element);
 		this.options = options;
@@ -23,8 +22,8 @@ var danmu_count=0;
 
 		$(element).css({
 			"position":"relative",
-			"width":options.width+250,
-			"height":options.height+52,
+			"width":options.width,
+			"height":options.height + 52,
 			"overflow":"hidden",
 //			"border-width": "thin",
 //			"border-bottom-color": "#555",
@@ -43,10 +42,10 @@ var danmu_count=0;
 		}, function() {
 			// This is functionally the same as the previous example.
 
-			$(".video-js").append('<div id="danmu71452" >');
+			$(".video-js").append('<div id="danmu71452" ></div>');
 			$(".vjs-live-controls").remove();
 
-
+			//弹幕查询
 			function query() {
 				$.get(options.url_to_get_danmu, function(data, status) {
 					danmu_from_sql = eval(data);
@@ -57,18 +56,25 @@ var danmu_count=0;
 								continue;
 						}
 						$('#danmu71452').danmu("add_danmu", danmu_ls);
-						}	
-					
+						}
 				});
 			};
 
-
-			function initer() {
-		
+			//视频载入初始化
+			//添加各个事件的回调函数
+			function initer(){
 				this.on('loadstart',function(e) {
-
 					$(".vjs-big-play-button").css({
-						"z-index": "500"
+						"z-index": "500",
+					});
+					$(".video-js").append("<div id= 'big-button-overlay'></div>");
+					$("#big-button-overlay").css({
+						"z-index": "501",
+						"width": options.width,
+						"height" : options.height,
+						"cursor" : "pointer"
+					}).onclick(function(){
+						$(".vjs-control-bar .vjs-play-control").click();//调用播放按钮的点击事件
 					});
 					$(".vjs-control-bar").css({
 						"z-index": "500"
@@ -87,7 +93,6 @@ var danmu_count=0;
 					});
 										if (options.url_to_get_danmu)
 						query();
-					
 				});
 				
 
@@ -95,10 +100,8 @@ var danmu_count=0;
 					console.log('playback has started!');
 					$('#danmu71452').data("nowtime", parseInt(danmu_video.currentTime() * 10));
 					$('#danmu71452').danmu("danmu_resume");
-					setTimeout("revise_time()",500)
-
+					setTimeout("revise_time()",500);//运行以后设置计数器来校对弹幕位置，500ms校对一次
 				});
-
 
 				this.on('pause', function(e) {
 					console.log('playback has paused!');
@@ -132,14 +135,8 @@ var danmu_count=0;
 					$('#danmu71452').data("speed",new_speed);
 					console.log("resize width:",danmu_video.width());
 				});
-				
-				
-				
-				
-				
-				
+
 				this.on('fullscreenchange', function(e) {
-					
 					if(this.isFullscreen()){
 						var new_speed=parseInt(options.speed*(screen.availWidth/options.width));	
 					$('#danmu71452').data("speed",new_speed);
@@ -177,14 +174,10 @@ $("#ctbcss").html("   .vjs-default-skin.vjs-has-started .vjs-control-bar { displ
 
 			$(".vjs-control-bar").append('<span  class="shezhi  vjs-control vjs-menu-button" id="danmu_shi_opt"  > 視 </span>');
 
-
-
-
 			$(".shezhi").css({
 				"cursor": "pointer",
 				"font-family": "Microsoft YaHei,微软雅黑,MicrosoftJhengHei"
 			});
-
 
 			$("#danmu_text").css({
 				"width": "40%",
@@ -220,19 +213,8 @@ $("#ctbcss").html("   .vjs-default-skin.vjs-has-started .vjs-control-bar { displ
 			});
 			
 			$(".vjs-play-control").attr("id","play_btn");
-	
-
-
-
 		});
-
-
-
 	};
-	
-		
-
-
 
 	DanmuPlayer.DEFAULTS = {
 		height: 450,
@@ -249,8 +231,6 @@ $("#ctbcss").html("   .vjs-default-skin.vjs-has-started .vjs-control-bar { displ
 		url_to_post_danmu: ""
 	}
 
-
-
 	function Plugin(option, arg) {
 		return this.each(function() {
 			var $this = $(this);
@@ -259,15 +239,12 @@ $("#ctbcss").html("   .vjs-default-skin.vjs-has-started .vjs-control-bar { displ
 			var action = typeof option == 'string' ? option : NaN;
 			if (!data) $this.data('danmuplayer', (data = new DanmuPlayer(this, options)))
 			if (action) data[action](arg);
-		})
-	};
+		});
+	}
 
 
 	$.fn.danmuplayer = Plugin;
 	$.fn.danmuplayer.Constructor = DanmuPlayer;
-
-
-
 })(jQuery);
 
 
@@ -284,6 +261,7 @@ jQuery(document).ready(function() {
 	});
 });
 
+//发送弹幕
 function send_danmu() {
 	var text = document.getElementById('danmu_text').value;
 	if (text.length==0){
@@ -314,7 +292,6 @@ function send_danmu() {
 	document.getElementById('danmu_text').value = '';
 };
 
-
 function op() {
 	var op = document.getElementById('op').value;
 	op = op / 100;
@@ -324,6 +301,7 @@ function op() {
 	});
 }
 
+//改变视频循环模式
 function changeloop() {
 	if (document.getElementById("isloop").checked)
 		danmu_video.loop(true)
@@ -331,6 +309,7 @@ function changeloop() {
 		danmu_video.loop(false)
 }
 
+//修改是否隐藏弹幕
 function changehide() {
 	var op = document.getElementById('op').value;
 	op = op / 100;
@@ -347,8 +326,6 @@ function changehide() {
 	}
 }
 
-
-
 function revise_time(){
 	//"""每隔半秒修正弹幕计时器的时间误差，以确保与视频时间的高同步率"""
 	if( Math.abs($('#danmu71452').data("nowtime") - parseInt(danmu_video.currentTime() * 10))>2 ){
@@ -356,8 +333,7 @@ function revise_time(){
 		$('#danmu71452').data("nowtime", parseInt(danmu_video.currentTime() * 10));
 		
 	}
-	t=setTimeout("revise_time()",100);	
-	
+	t=setTimeout("revise_time()",100);
 }
 
 

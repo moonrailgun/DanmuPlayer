@@ -478,7 +478,7 @@ colpick Color Picker / colpick.com
   border-right: 8px dashed transparent;
   left: 50%;
   margin-left: -8px;
-  top: -8px;
+  bottom: -0.5em;
 }
 
 .tooltip71452.pos_nw .pointer {
@@ -999,13 +999,14 @@ Positioning of the play button in the center or other corners can be done more
 easily in the skin designer. http://designer.videojs.com/
 */
 .vjs-default-skin .vjs-big-play-button {
-  left: 0.5em;
-  top: 0.5em;
+  left: 0.7em;
+  top : auto;
+  bottom: 0.7em;
   font-size: 3em;
   display: block;
   z-index: 2;
   position: absolute;
-  width: 4em;
+  width: 2.6em;
   height: 2.6em;
   text-align: center;
   vertical-align: middle;
@@ -1019,7 +1020,7 @@ easily in the skin designer. http://designer.videojs.com/
   /* border-radius */
   -webkit-border-radius: 0.8em;
   -moz-border-radius: 0.8em;
-  border-radius: 0.8em;
+  border-radius: 1.3em;
   /* box-shadow */
   -webkit-box-shadow: 0px 0px 1em rgba(255, 255, 255, 0.25);
   -moz-box-shadow: 0px 0px 1em rgba(255, 255, 255, 0.25);
@@ -1038,7 +1039,7 @@ easily in the skin designer. http://designer.videojs.com/
   margin-left: -2.1em;
   /* Center it vertically */
   top: 50%;
-  margin-top: -1.4000000000000001em;
+  margin-top: -1.4em;
 }
 /* Hide if controls are disabled */
 .vjs-default-skin.vjs-controls-disabled .vjs-big-play-button {
@@ -1075,7 +1076,6 @@ easily in the skin designer. http://designer.videojs.com/
   font-family: VideoJS;
   /* In order to center the play icon vertically we need to set the line height
      to the same as the button height */
-
   line-height: 2.6em;
   text-shadow: 0.05em 0.05em 0.1em #000;
   text-align: center /* Needed for IE8 */;
