@@ -142,6 +142,7 @@ var cyntax = {
  * http://code.cyntaxtech.com/plugins/jquery-timer
  */
 
+//传递Jq对象
 (function ($) {
     cyntax.plugins.timer = function (ele, options) {
         this.$this = $(ele);
@@ -225,11 +226,8 @@ var cyntax = {
  * @license MIT
  */
 
-
 ;
 (function ($) {
-
-
     var Danmu = function (element, options) {
         this.$element = $(element);
         this.options = options;
@@ -241,7 +239,6 @@ var cyntax = {
         $(element).data("topspace", 0);
         $(element).data("bottomspace", 0);
         $(element).data("speed", options.speed)
-
 
         this.$element.css({
             "position": "absolute",
@@ -406,7 +403,6 @@ var cyntax = {
 
     Danmu.prototype.danmu_hideall = function () {
         $('.flying').css({"opacity": 0});
-
     };
 
     Danmu.prototype.add_danmu = function (arg) {
@@ -427,14 +423,18 @@ var cyntax = {
             var options = $.extend({}, Danmu.DEFAULTS, typeof option == 'object' && option);
             var data = $this.data('danmu');
             var action = typeof option == 'string' ? option : NaN;
-            if (!data) $this.data('danmu', (data = new Danmu(this, options)))
-            if (action)    data[action](arg);
+            if (!data) {
+                $this.data('danmu', (data = new Danmu(this, options)));
+            }
+            if (action) {
+                data[action](arg);
+            }
         })
     };
 
-
+    //对每个JQ实例有效
     $.fn.danmu = Plugin;
-    $.fn.danmu.Constructor = Danmu;
+    //$.fn.danmu.Constructor = Danmu;————并没有什么卵用
 
 
 })(jQuery);
